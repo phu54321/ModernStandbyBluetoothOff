@@ -4,7 +4,7 @@
 #include "tray.hpp"
 #include "resource.h"
 
-#define TRAY_ICON_ID 12567
+#define TRAY_ICON_ID 8358
 
 void addTrayIcon(HINSTANCE hInstance, HWND hWnd)
 {

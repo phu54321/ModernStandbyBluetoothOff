@@ -26,15 +26,15 @@ bool ProcessSuspendResumeNotification(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
     {
     case PBT_APMSUSPEND:
       turnOffRadio();
-      break;
+      return true;
 
     // case PBT_APMRESUMEAUTOMATIC:
     case PBT_APMRESUMESUSPEND:
       resumeRadio();
-      break;
+      return true;
     }
   }
-  return true;
+  return false;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
