@@ -15,7 +15,7 @@ void addTrayIcon(HINSTANCE hInstance, HWND hWnd)
   nid.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP;
   nid.uCallbackMessage = TRAY_NOTIFY;
   nid.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON));
-  _tcsncpy(nid.szTip, TEXT("ModernStandbyBluetoothOff"), 128);
+  _tcscpy_s(nid.szTip, TEXT("ModernStandbyBluetoothOff"));
   Shell_NotifyIcon(NIM_ADD, &nid);
 }
 
