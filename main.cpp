@@ -13,7 +13,7 @@
 #include "resource.h"
 #include "tray.hpp"
 #include "radio.hpp"
-
+#include "debugLog.hpp"
 using namespace winrt;
 
 HPOWERNOTIFY g_hPowerNotify;
@@ -25,11 +25,13 @@ bool ProcessSuspendResumeNotification(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
     switch (wParam)
     {
     case PBT_APMSUSPEND:
+      logA("Turning bluetooth OF...");
       turnOffRadio();
       return true;
 
     // case PBT_APMRESUMEAUTOMATIC:
     case PBT_APMRESUMESUSPEND:
+      logA("Turning bluetooth ON...");
       resumeRadio();
       return true;
     }
@@ -116,6 +118,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLin
   addTrayIcon(hInstance, hWnd);
   g_hPowerNotify = RegisterSuspendResumeNotification(hWnd, DEVICE_NOTIFY_WINDOW_HANDLE);
 
+  logA("ModernStandbyBluetoothOff Starting...");
   MSG msg = {};
 
   while (GetMessage(&msg, hWnd, 0, 0))
@@ -124,5 +127,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLin
     DispatchMessage(&msg);
   }
 
+  logA("ModernStandbyBluetoothOff stopped");
   return 0;
 }

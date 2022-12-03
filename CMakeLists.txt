@@ -6,5 +6,6 @@ add_executable(ModernStandbyBluetoothOff WIN32
   tray.cpp
   radio.cpp
   main.cpp
+  debugLog.cpp
   resource.rc
   )
