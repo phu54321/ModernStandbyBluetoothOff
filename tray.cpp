@@ -7,7 +7,7 @@
 #define TRAY_ICON_ID 8358
 
 void addTrayIcon(HINSTANCE hInstance, HWND hWnd) {
-    NOTIFYICONDATA nid;
+    NOTIFYICONDATA nid = {0};
     nid.cbSize = sizeof(nid);
     nid.hWnd = hWnd;
     nid.uID = TRAY_ICON_ID;
@@ -16,6 +16,14 @@ void addTrayIcon(HINSTANCE hInstance, HWND hWnd) {
     nid.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON));
     _tcscpy_s(nid.szTip, TEXT("ModernStandbyBluetoothOff"));
     Shell_NotifyIcon(NIM_ADD, &nid);
+}
+
+void deleteTrayIcon(HWND hWnd) {
+    NOTIFYICONDATA nid = {0};
+    nid.cbSize = sizeof(nid);
+    nid.hWnd = hWnd;
+    nid.uID = TRAY_ICON_ID;
+    Shell_NotifyIcon(NIM_DELETE, &nid);
 }
 
 bool processTrayMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {

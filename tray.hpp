@@ -7,4 +7,6 @@
 
 void addTrayIcon(HINSTANCE hInstance, HWND hWnd);
 
+void deleteTrayIcon(HWND hWnd);
+
 bool processTrayMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);

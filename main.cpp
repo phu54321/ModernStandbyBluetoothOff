@@ -112,5 +112,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLin
     }
 
     logA("ModernStandbyBluetoothOff stopped");
+    deleteTrayIcon(hWnd);
     return 0;
 }
