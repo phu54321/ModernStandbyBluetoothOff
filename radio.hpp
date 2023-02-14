@@ -1,5 +1,10 @@
 #pragma once
 
-void turnOffRadio();
+#include <winrt/Windows.Foundation.h>
+#include <winrt/Windows.Foundation.Collections.h>
 
-void resumeRadio();
+using namespace winrt::Windows::Foundation;
+
+IAsyncAction turnOffRadio();
+
+IAsyncAction resumeRadio();

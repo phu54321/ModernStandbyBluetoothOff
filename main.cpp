@@ -23,16 +23,14 @@ bool ProcessSuspendResumeNotification(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
     if (msg == WM_POWERBROADCAST) {
         switch (wParam) {
             case PBT_APMSUSPEND:
-                logA("PBT_APMSUSPEND");
-                logA("Turning bluetooth OF...");
-                turnOffRadio();
+                logA("[PBT_APMSUSPEND] Turning bluetooth OFF...");
+                turnOffRadio().get();
                 return true;
 
                 // case PBT_APMRESUMEAUTOMATIC:
             case PBT_APMRESUMESUSPEND:
-                logA("PBT_APMRESUMESUSPEND");
-                logA("Turning bluetooth ON...");
-                resumeRadio();
+                logA("[PBT_APMRESUMESUSPEND] Turning bluetooth ON...");
+                resumeRadio().get();
                 return true;
         }
     }
