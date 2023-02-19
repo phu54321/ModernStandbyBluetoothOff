@@ -1,14 +1,7 @@
 #include <windows.h>
-#include <powrprof.h>
-#include <tlhelp32.h>
-#include <string>
-#include <algorithm>
-#include <set>
+#include <winrt/Windows.Foundation.h>
 #include <tchar.h>
-#include <iostream>
-#include <future>
 
-#include "winrt/Windows.Foundation.h"
 
 #include "resource.h"
 #include "tray.hpp"
@@ -19,19 +12,20 @@ using namespace winrt;
 
 HPOWERNOTIFY g_hPowerNotify;
 
-bool ProcessSuspendResumeNotification(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+bool ProcessSuspendResumeNotification(HWND rhWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     if (msg == WM_POWERBROADCAST) {
         switch (wParam) {
             case PBT_APMSUSPEND:
-                logA("[PBT_APMSUSPEND] Turning bluetooth OFF...");
-                turnOffRadio().get();
+                debugLog("[PBT_APMSUSPEND] Turning bluetooth OFF...");
+                turnOffRadio();
                 return true;
 
-                // case PBT_APMRESUMEAUTOMATIC:
             case PBT_APMRESUMESUSPEND:
-                logA("[PBT_APMRESUMESUSPEND] Turning bluetooth ON...");
-                resumeRadio().get();
+                debugLog("[PBT_APMRESUMESUSPEND] Turning bluetooth ON...");
+                resumeRadio();
                 return true;
+
+            default:;
         }
     }
     return false;
@@ -42,11 +36,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         return TRUE;
 
     if (msg == TRAY_NOTIFY) {
-        if (processTrayMessage(hWnd, msg, wParam, lParam))
+        if (processTrayMessage(hWnd, msg, wParam, lParam)) {
             return 0;
+        }
     } else if (msg == WM_COMMAND) {
         auto wmId = LOWORD(wParam);
-        auto wmEvent = HIWORD(wParam);
+//        auto wmEvent = HIWORD(wParam);
 
         if (wmId == MENU_QUIT_MESSAGE) {
             PostQuitMessage(0);
@@ -103,7 +98,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLin
     addTrayIcon(hInstance, hWnd);
     g_hPowerNotify = RegisterSuspendResumeNotification(hWnd, DEVICE_NOTIFY_WINDOW_HANDLE);
 
-    logA("ModernStandbyBluetoothOff Starting...");
+    debugLog("ModernStandbyBluetoothOff Starting...");
     MSG msg = {};
 
     while (GetMessage(&msg, hWnd, 0, 0)) {
@@ -111,7 +106,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLin
         DispatchMessage(&msg);
     }
 
-    logA("ModernStandbyBluetoothOff stopped");
+    debugLog("ModernStandbyBluetoothOff stopped");
     deleteTrayIcon(hWnd);
     return 0;
 }
