@@ -1,12 +1,18 @@
+// Copyright (c) 2023 Park Hyunwoo
+//
+// This software is released under the MIT License.
+// https://opensource.org/licenses/MIT
+
 #include <windows.h>
 #include <tlhelp32.h>
 #include <tchar.h>
 #include "tray.hpp"
-#include "resource.h"
+#include "../res/resource.h"
 
 #define TRAY_ICON_ID 8358
 
-void addTrayIcon(HINSTANCE hInstance, HWND hWnd) {
+void addTrayIcon(HINSTANCE hInstance, HWND hWnd)
+{
     NOTIFYICONDATA nid = {0};
     nid.cbSize = sizeof(nid);
     nid.hWnd = hWnd;
@@ -18,7 +24,8 @@ void addTrayIcon(HINSTANCE hInstance, HWND hWnd) {
     Shell_NotifyIcon(NIM_ADD, &nid);
 }
 
-void deleteTrayIcon(HWND hWnd) {
+void deleteTrayIcon(HWND hWnd)
+{
     NOTIFYICONDATA nid = {0};
     nid.cbSize = sizeof(nid);
     nid.hWnd = hWnd;
@@ -26,12 +33,14 @@ void deleteTrayIcon(HWND hWnd) {
     Shell_NotifyIcon(NIM_DELETE, &nid);
 }
 
-bool processTrayMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-    if (wParam == TRAY_ICON_ID && lParam == WM_RBUTTONUP) {
+bool processTrayMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+    if (wParam == TRAY_ICON_ID && lParam == WM_RBUTTONUP)
+    {
         auto hMenu = CreateMenu();
         auto hMenubar = CreateMenu();
         AppendMenu(hMenu, MF_STRING, MENU_QUIT_MESSAGE, TEXT("Quit"));
-        AppendMenu(hMenubar, MF_POPUP, (UINT_PTR) hMenu, TEXT("Menu"));
+        AppendMenu(hMenubar, MF_POPUP, (UINT_PTR)hMenu, TEXT("Menu"));
 
         auto hPopupMenu = GetSubMenu(hMenubar, 0);
         POINT pt;
