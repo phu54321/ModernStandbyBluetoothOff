@@ -15,6 +15,7 @@
 using namespace winrt;
 
 HPOWERNOTIFY g_hPowerNotify;
+UINT WM_TASKBARCREATED = -1;
 
 bool ProcessSuspendResumeNotification(HWND rhWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -38,20 +39,21 @@ bool ProcessSuspendResumeNotification(HWND rhWnd, UINT msg, WPARAM wParam, LPARA
     return false;
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
-{
+LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     if (ProcessSuspendResumeNotification(hWnd, msg, wParam, lParam))
         return TRUE;
 
-    if (msg == TRAY_NOTIFY)
-    {
-        if (processTrayMessage(hWnd, msg, wParam, lParam))
-        {
+    if (msg == WM_TASKBARCREATED) {
+        auto hInstance = reinterpret_cast<HINSTANCE>(GetWindowLongPtr(hWnd, GWLP_HINSTANCE));
+        addTrayIcon(hInstance, hWnd);
+        return 0;
+    }
+
+    if (msg == TRAY_NOTIFY) {
+        if (processTrayMessage(hWnd, msg, wParam, lParam)) {
             return 0;
         }
-    }
-    else if (msg == WM_COMMAND)
-    {
+    } else if (msg == WM_COMMAND) {
         auto wmId = LOWORD(wParam);
         //        auto wmEvent = HIWORD(wParam);
 
@@ -75,14 +77,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 ///
 
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nCmdShow)
-{
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nCmdShow) {
+    WM_TASKBARCREATED = RegisterWindowMessageW(L"TaskbarCreated");
+
     winrt::init_apartment();
 
     // Disable double execution
     auto mutex = CreateMutex(nullptr, TRUE, TEXT("Global\\ModernStandbyBluetoothOff"));
-    if (!mutex || GetLastError())
-    {
+    if (!mutex || GetLastError()) {
         MessageBox(nullptr, TEXT("Another instance already running."), TEXT("Error"), MB_OK);
         return 0;
     }
