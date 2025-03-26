@@ -51,8 +51,7 @@ void resumeRadio()
         if (radio.Kind() == RadioKind::Bluetooth)
         {
             auto it = oldBluetoothStateMap.find(radio.Name());
-            if (it != oldBluetoothStateMap.end())
-            {
+            if (it != oldBluetoothStateMap.end()) {
                 auto newState = it->second;
                 ops.push_back(radio.SetStateAsync(newState));
                 oldBluetoothStateMap.erase(it);
@@ -60,9 +59,11 @@ void resumeRadio()
             }
         }
     }
+
+    oldBluetoothStateMap.clear();
+
     // wait all SetStateAsync to complete
-    for (auto &&op : ops)
-    {
+    for (auto &&op: ops) {
         op.get();
     }
 }
