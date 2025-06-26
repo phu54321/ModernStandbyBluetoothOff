@@ -7,4 +7,5 @@
 
 #include <windows.h>
 
-#define debugLog(fmt, ...) OutputDebugStringA(std::format(fmt, ##__VA_ARGS__).c_str())
+#define debugLog(fmt, ...) logA(std::format(fmt, ##__VA_ARGS__))
+void logA(const std::string& message);
